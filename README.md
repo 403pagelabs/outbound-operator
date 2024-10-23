@@ -46,7 +46,7 @@ Configure cleanup settings to maintain database performance:
 Use the search box to find specific URLs or domains.
 
 ## Updates
-Updates can be managed through the normal wp-admin processes, however the source for new version is this GitHub repo and not wordpress.org.
+Updates for this specific plugin are served from this Github repo and not wordpress.org, though they can be handled in wp-admin like any other plugin.
 
 ## Development
 
