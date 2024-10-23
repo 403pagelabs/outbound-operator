@@ -10,6 +10,10 @@ A WordPress plugin that monitors, logs, and manages all outbound HTTP requests f
 - 🧹 **Automatic Cleanup**: Configurable retention settings to prevent database bloat
 - ⚙️ **Import/Export**: Share settings between sites
 
+## Screenshot
+
+![Outbound Operator Main Interface](screenshots/outbound-operator-settings.png)
+
 ## Installation
 
 1. Download the latest release
