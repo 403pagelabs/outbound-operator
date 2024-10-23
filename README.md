@@ -1,6 +1,6 @@
 # Outbound Operator
 
-A plugin that logs, blocks and rewrites outbound HTTP requests from your WordPress site.
+A plugin that logs, blocks and rewrites outbound HTTP requests from your WordPress site. The plugin update code will pull from this Github repo and not wordpress.org.
 
 ## Features
 
@@ -44,6 +44,9 @@ Configure cleanup settings to maintain database performance:
 ### Search and Filter
 
 Use the search box to find specific URLs or domains.
+
+## Updates
+Updates can be managed through the normal wp-admin processes, however the source for new version is this GitHub repo and not wordpress.org.
 
 ## Development
 
