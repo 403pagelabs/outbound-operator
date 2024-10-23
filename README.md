@@ -1,6 +1,6 @@
 # Outbound Operator
 
-A WordPress plugin that monitors, logs, and manages all outbound HTTP requests from your WordPress site.
+A plugin that logs, blocks and rewrites outbound HTTP requests from your WordPress site.
 
 ## Features
 
