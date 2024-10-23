@@ -199,25 +199,26 @@ $items = $wpdb->get_results($wpdb->prepare(
     <div class="cleanup-settings-section">
         <h2 class="title">Log Cleanup Settings</h2>
         <table class="form-table" role="presentation">
-            <tr>
-                <th scope="row">
-                    <label for="retention_days">Retention Period</label>
-                </th>
-                <td>
-                    <input 
-                        type="number" 
-                        id="retention_days" 
-                        name="outbound_operator_retention_days" 
-                        value="<?php echo esc_attr(get_option('outbound_operator_retention_days', OUTBOUND_OPERATOR_DEFAULT_RETENTION_DAYS)); ?>" 
-                        class="small-text"
-                        min="1"
-                    > days
-                    <p class="description">Automatically delete records older than this many days (except manual entries and URLs with configured settings)</p>
-                </td>
-            </tr>
+        <tr>
+            <th scope="row">
+                <label for="retention_days">Retention Period</label>
+                <span class="info-tooltip dashicons dashicons-info-outline" title="Automatically delete records older than this many days (except manual entries and URLs with configured settings)"></span>
+            </th>
+            <td>
+                <input 
+                    type="number" 
+                    id="retention_days" 
+                    name="outbound_operator_retention_days" 
+                    value="<?php echo esc_attr(get_option('outbound_operator_retention_days', OUTBOUND_OPERATOR_DEFAULT_RETENTION_DAYS)); ?>" 
+                    class="small-text"
+                    min="1"
+                > days
+            </td>
+        </tr>
             <tr>
                 <th scope="row">
                     <label for="max_records">Maximum Records</label>
+                    <span class="info-tooltip dashicons dashicons-info-outline" title="Keep only this many most recent records (except manual entries and URLs with configured settings)"></span>
                 </th>
                 <td>
                     <input 
@@ -228,14 +229,15 @@ $items = $wpdb->get_results($wpdb->prepare(
                         class="small-text"
                         min="1"
                     >
-                    <p class="description">Keep only this many most recent records (except manual entries and URLs with configured settings)</p>
                 </td>
             </tr>
             <tr>
-                <th scope="row">Manual Cleanup</th>
+                <th scope="row">
+                    <label for="max_records">Manual Cleanup</label>
+                    <span class="info-tooltip dashicons dashicons-info-outline" title="Run the cleanup process immediately using the settings above"></span>
+                </th>
                 <td>
                     <button type="button" id="run-cleanup" class="button">Run Cleanup Now</button>
-                    <p class="description">Run the cleanup process immediately using the settings above.</p>
                 </td>
             </tr>
         </table>

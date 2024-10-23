@@ -664,6 +664,20 @@ jQuery(document).ready(function($) {
         $('#retention_days, #max_records').on('input', function() {
             checkForChanges();
         });
+
+        // Initialize tooltips
+        $('.info-tooltip').each(function() {
+            // Remove any existing tooltip
+            $(this).tooltipster('destroy');
+            
+            // Initialize WordPress tooltip
+            $(this).tipTip({
+                'attribute': 'title',
+                'fadeIn': 50,
+                'fadeOut': 50,
+                'delay': 200
+            });
+        });
     });
 
     function isValidUrl(url) {
