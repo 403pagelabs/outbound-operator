@@ -1,9 +1,31 @@
 <?php
 /**
  * Plugin Name: Outbound Operator
- * Description: Log, block, rewrite outbound calls from wp-admin
- * Version: 0.9
+ * Plugin URI: https://github.com/403pagelabs/outbound-operator
+ * Description: Log, block, rewrite outbound calls from wp-admin.
+ * Version: 0.9.4
+ * Requires at least: 5.0
+ * Requires PHP: 7.4
  * Author: 403Page
+ * Author URI: https://403page.com
+ * License: GPL v2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: outbound-operator
+ * Domain Path: /languages
+ * Update URI: https://github.com/403pagelabs/outbound-operator
+
+ * Outbound Operator is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ * 
+ * Outbound Operator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Outbound Operator. If not, see https://www.gnu.org/licenses/gpl-2.0.html.
  */
 
 if (!defined('ABSPATH')) {
@@ -11,9 +33,11 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('OUTBOUND_OPERATOR_VERSION', '0.9');
+define('OUTBOUND_OPERATOR_VERSION', '0.9.4');
 define('OUTBOUND_OPERATOR_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('OUTBOUND_OPERATOR_PLUGIN_URL', plugin_dir_url(__FILE__));
+
+require_once plugin_dir_path(__FILE__) . 'includes/class-github-updater.php';
 
 // Define cleanup constants
 define('OUTBOUND_OPERATOR_DEFAULT_RETENTION_DAYS', 14);
@@ -174,6 +198,7 @@ function outbound_operator_init() {
     if (is_admin()) {
         add_action('admin_menu', array($admin, 'add_admin_menu'));
         add_action('admin_init', array($admin, 'admin_init'));
+        new Outbound_Operator_GitHub_Updater(__FILE__);
     }
 }
 
