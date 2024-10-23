@@ -35,57 +35,6 @@ jQuery(document).ready(function($) {
         }
     }
 
-    function initializeTooltips() {
-        tippy('.last-call-info', {
-            allowHTML: true,
-            interactive: true,
-            maxWidth: 800,
-            theme: 'light-border',
-            placement: 'right',
-            arrow: true,
-            animation: 'shift-away',
-            content: (reference) => {
-                const content = reference.getAttribute('data-tippy-content');
-                return content ? content.replace(/\\n/g, '<br>') : 'No response data available';
-            },
-            onCreate(instance) {
-                // Add click handler for copy button
-                instance.popper.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('copy-response')) {
-                        const reference = instance.reference;
-                        const fullResponse = reference.getAttribute('data-full-response');
-                        
-                        navigator.clipboard.writeText(fullResponse).then(() => {
-                            const button = e.target;
-                            button.textContent = '✓ Copied!';
-                            button.classList.add('copied');
-                            
-                            setTimeout(() => {
-                                button.textContent = '📋 Copy Response';
-                                button.classList.remove('copied');
-                            }, 2000);
-                        }).catch(err => {
-                            console.error('Failed to copy text: ', err);
-                            const button = e.target;
-                            button.textContent = '❌ Failed to copy';
-                            setTimeout(() => {
-                                button.textContent = '📋 Copy Response';
-                            }, 2000);
-                        });
-                    }
-                });
-            }
-        });
-    }
-
-        // Re-initialize tooltips after table updates
-    $(document).ajaxComplete(function(event, xhr, settings) {
-        if (settings.url.includes('admin-ajax.php')) {
-            initializeTooltips();
-        }
-    });
-    
-
     function updateSaveButton() {
         var wasDisabled = $submitButton.prop('disabled');
         $submitButton.prop('disabled', !formChanged);
@@ -129,7 +78,6 @@ jQuery(document).ready(function($) {
                     $tableBody.html(response.data.html);
                     updateSortingIndicators(currentOrderBy, currentOrder);
                     initializeRowListeners();
-                    initializeTooltips();
                     initializeCopyButtons();
                 } else {
                     console.error('Failed to update table');
@@ -705,7 +653,6 @@ jQuery(document).ready(function($) {
     $(document).ready(function() {
         initializeForm();
         initializeCopyButtons();
-        initializeTooltips();
         
         // Set initial sorting
         currentOrderBy = 'last_call';
