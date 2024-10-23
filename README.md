@@ -47,14 +47,9 @@ Use the search box to find specific URLs or domains.
 
 ## Development
 
-Built for WordPress 5.0+ using:
-- PHP 7.4+
-- WordPress REST API
-- jQuery
-
-## Screenshots
-
-[Screenshots would go here]
+Tested on:
+- PHP 8.2
+- WordPress 6.6.2
 
 ## Contributing
 
