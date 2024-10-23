@@ -41,10 +41,72 @@ class Outbound_Operator_Admin {
     public function enqueue_admin_assets() {
         wp_enqueue_style('outbound-operator-admin-style', OUTBOUND_OPERATOR_PLUGIN_URL . 'admin/css/admin-style.css', array(), OUTBOUND_OPERATOR_VERSION);
         wp_enqueue_script('outbound-operator-admin', OUTBOUND_OPERATOR_PLUGIN_URL . 'admin/js/admin-script.js', array('jquery'), OUTBOUND_OPERATOR_VERSION, true);
+
+        wp_enqueue_script('tippy', 'https://unpkg.com/@popperjs/core@2', array(), OUTBOUND_OPERATOR_VERSION, true);
+        wp_enqueue_script('tippy-js', 'https://unpkg.com/tippy.js@6', array('tippy'), OUTBOUND_OPERATOR_VERSION, true);
+
         wp_localize_script('outbound-operator-admin', 'outboundCallLogger', array(
             'ajaxurl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('outbound-operator-nonce')
         ));
+    }
+
+    private function format_response_data($row) {
+        $copy_button = '<button class="copy-response" title="Copy full response">📋 Copy Response</button>';
+        
+        $output = array();
+        
+        // Add request details section
+        $output[] = "REQUEST:";
+        $output[] = "Method: " . esc_html($row->request_method);
+        
+        // Format headers if present
+        if (!empty($row->request_headers)) {
+            $headers = json_decode($row->request_headers, true);
+            if ($headers) {
+                $output[] = "\nHeaders:";
+                foreach ($headers as $key => $value) {
+                    $output[] = "  {$key}: {$value}";
+                }
+            }
+        }
+        
+        // Format request body if present
+        if (!empty($row->request_body)) {
+            $output[] = "\nRequest Body:";
+            // Try to decode JSON
+            $decoded = json_decode($row->request_body, true);
+            if ($decoded) {
+                $output[] = json_encode($decoded, JSON_PRETTY_PRINT);
+            } else {
+                $output[] = $row->request_body;
+            }
+        }
+        
+        // Add response section
+        $output[] = "\nRESPONSE:";
+        $output[] = "Status: " . ($row->response_code ?: 'N/A');
+        
+        if (!empty($row->response_body)) {
+            $output[] = "\nResponse Body:";
+            // Try to decode JSON
+            $decoded = json_decode($row->response_body, true);
+            if ($decoded) {
+                $output[] = json_encode($decoded, JSON_PRETTY_PRINT);
+            } else {
+                $output[] = $row->response_body;
+            }
+        }
+        
+        return $copy_button . "\n\n" . implode("\n", $output);
+    }
+    
+    private function get_status_class($code) {
+        if (!$code) return 'status-unknown';
+        if ($code < 300) return 'status-success';
+        if ($code < 400) return 'status-redirect';
+        if ($code < 500) return 'status-client-error';
+        return 'status-server-error';
     }
 
     private function add_cleanup_settings_section() {
@@ -553,6 +615,22 @@ class Outbound_Operator_Admin {
         $is_secure = $parsed_url['scheme'] === 'https';
         $icon_color = $is_secure ? '#00a000' : '#ca4a1f';
         $icon_title = $is_secure ? 'Secure (HTTPS)' : 'Not Secure (HTTP)';
+        
+        // Get the latest response data
+        global $wpdb;
+        $latest_response = $wpdb->get_row($wpdb->prepare("
+            SELECT response_code, response_body, request_method, request_body, request_headers, time 
+            FROM $this->table_name 
+            WHERE url = %s 
+            ORDER BY time DESC 
+            LIMIT 1
+        ", $row->url));
+        
+        // Format the response data for the tooltip
+        $response_data = '';
+        if ($latest_response) {
+            $response_data = $this->format_response_data($latest_response);
+        }
         ?>
         <tr>
             <td class="column-security">
@@ -579,7 +657,18 @@ class Outbound_Operator_Admin {
                     </svg>
                 </span>
             </td>
-            <td class="column-last_call"><?php echo esc_html($row->last_call); ?></td>
+            <td class="column-last_call">
+                <?php if ($row->is_manual && $row->has_outbound_call == 0): ?>
+                    None
+                <?php else: ?>
+                    <span class="last-call-info" 
+                        data-tippy-content="<?php echo esc_attr($response_data); ?>"
+                        data-full-response="<?php echo esc_attr($latest_response->response_body); ?>"
+                        style="cursor: help;">
+                        <?php echo esc_html($row->last_call); ?>
+                    </span>
+                <?php endif; ?>
+            </td>
             <td class="column-request_count_24h"><?php echo esc_html($row->request_count_24h); ?></td>
             <td class="column-block_host">
                 <label class="switch">

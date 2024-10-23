@@ -359,6 +359,28 @@ td.column-delete::before {
     color: #1d2327;
 }
 
+
+.last-call-info {
+    border-bottom: 1px dotted #666;
+}
+
+/* Tippy theme customization */
+.tippy-box[data-theme~='light-border'] {
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    color: #1a202c;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.tippy-box[data-theme~='light-border'] .tippy-content {
+    padding: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    font-family: monospace;
+    font-size: 12px;
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
     .top-controls {
