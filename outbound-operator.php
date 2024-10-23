@@ -1,11 +1,8 @@
 <?php
 /**
  * Plugin Name: Outbound Operator
- * Plugin URI: https://github.com/403pagelabs/outbound-operator
- * Description: Log, block, rewrite outbound calls from wp-admin.
- * Version: 0.9.4
- * Requires at least: 5.0
- * Requires PHP: 7.4
+ * Description: Log, block, rewrite outbound calls from wp-admin
+ * Version: 0.9.5
  * Author: 403Page
  * Author URI: https://403page.com
  * License: GPL v2 or later
@@ -33,7 +30,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('OUTBOUND_OPERATOR_VERSION', '0.9.4');
+define('OUTBOUND_OPERATOR_VERSION', '0.9.5');
 define('OUTBOUND_OPERATOR_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('OUTBOUND_OPERATOR_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -199,7 +196,23 @@ function outbound_operator_init() {
         add_action('admin_menu', array($admin, 'add_admin_menu'));
         add_action('admin_init', array($admin, 'admin_init'));
         new Outbound_Operator_GitHub_Updater(__FILE__);
+
+        error_log('Outbound Operator: Initializing GitHub updater');
+        try {
+            new Outbound_Operator_GitHub_Updater(__FILE__);
+            error_log('Outbound Operator: GitHub updater initialized successfully');
+        } catch (Exception $e) {
+            error_log('Outbound Operator: Failed to initialize GitHub updater - ' . $e->getMessage());
+        }
     }
+}
+
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'outbound_operator_add_plugin_settings_link');
+
+function outbound_operator_add_plugin_settings_link($links) {
+    $settings_link = '<a href="' . admin_url('tools.php?page=outbound-operator') . '">' . __('Settings', 'outbound-operator') . '</a>';
+    array_unshift($links, $settings_link);
+    return $links;
 }
 
 outbound_operator_init();
