@@ -156,7 +156,7 @@ jQuery(document).ready(function($) {
     }
     
     function updateListeningStatus(isListening) {
-        $listeningStatus.text(isListening ? 'Listening to outbound calls...' : 'Not listening to outbound calls');
+        $listeningStatus.text(isListening ? 'Logging outbound calls...' : 'Not logging outbound calls');
         $listeningStatus.toggleClass('listening', isListening);
     }
 
